@@ -16,10 +16,12 @@ public class JavaProfMain {
 
     private static void multiCatch(){
         try {
-            System.out.printf("%#%f",1);
-        } catch (IllegalFormatConversionException | IllegalFormatFlagsException | IllegalMonitorStateException e) {
-            System.out.println("Caught exc");
+            System.out.printf("%f",1);
+        } catch (IllegalFormatFlagsException e) {
+            System.out.println("Caught IllegalFormatFlagsException " + e.getFlags());
+        } finally {
+            System.out.println("JavaProfMain.multiCatch end");
         }
-        System.out.println("JavaProfMain.toThrowOrNotToThrow end");
+
     }
 }
