@@ -17,9 +17,7 @@ public class JavaProfMain {
     private static void multiCatch(){
         try {
             System.out.printf("%#%f",1);
-        } catch (IllegalFormatConversionException e) {
-            System.out.println("Caught exc");
-        } catch (IllegalFormatFlagsException e) {
+        } catch (IllegalFormatConversionException | IllegalFormatFlagsException | IllegalMonitorStateException e) {
             System.out.println("Caught exc");
         }
         System.out.println("JavaProfMain.toThrowOrNotToThrow end");
