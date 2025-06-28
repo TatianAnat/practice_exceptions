@@ -17,7 +17,7 @@ public class Account {
         //будем прибавлять если только денег больше 0, если меньше нуля
         if (balance + amount < 0) {
             //будем выкидывать исключение
-            throw  new IllegalArgumentException();
+            throw  new TransactionException(name);
         }
         //в другом случае
         balance += amount;

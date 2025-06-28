@@ -1,4 +1,5 @@
 import com.skypro.account.Account;
+import com.skypro.account.TransactionException;
 
 import java.util.IllegalFormatConversionException;
 import java.util.IllegalFormatFlagsException;
@@ -6,7 +7,11 @@ import java.util.IllegalFormatFlagsException;
 public class JavaProfMain {
     public static void main(String[] args) {
         System.out.println("Skypro Uni - Java Profession start!");
-        businessTransaction();
+        try {
+            businessTransaction();
+        } catch (TransactionException e) {
+            System.out.println(e);
+        }
 }
     private static void toThrowOrNotToThrow(boolean exc) throws Exception {
         System.out.println("JavaProfMain.toThrowOrNotToThrow start");
@@ -29,18 +34,12 @@ public class JavaProfMain {
     private static void businessTransaction() {
         Account ivan = new Account("Ivan", 20);
         Account petr = new Account("Petr", 5);
-
-        try {
-            System.out.println("ivan = " + ivan);
-            System.out.println("petr = " + petr);
-            //выполним метод перевода денег
-            sendMoney(ivan, petr, 30);
-            System.out.println("ivan = " + ivan);
-            System.out.println("petr = " + petr);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Caught IllegalArgumentException");
-            e.printStackTrace();
-        }
+        System.out.println("ivan = " + ivan);
+        System.out.println("petr = " + petr);
+        //выполним метод перевода денег
+        sendMoney(ivan, petr, 30);
+        System.out.println("ivan = " + ivan);
+        System.out.println("petr = " + petr);
     }
 
     private static void sendMoney(Account from, Account to, int amount) {
