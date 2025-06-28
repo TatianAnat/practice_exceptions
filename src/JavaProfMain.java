@@ -1,4 +1,5 @@
 import com.skypro.account.Account;
+import com.skypro.account.PersonalInfoException;
 import com.skypro.account.TransactionException;
 
 import java.util.IllegalFormatConversionException;
@@ -11,6 +12,8 @@ public class JavaProfMain {
             businessTransaction();
         } catch (TransactionException e) {
             System.out.println(e);
+        } catch (PersonalInfoException e) {
+            System.out.println("Позвоните менеджеру! Аккаунт без имени.");
         }
 }
     private static void toThrowOrNotToThrow(boolean exc) throws Exception {
@@ -43,7 +46,7 @@ public class JavaProfMain {
     }
 
     private static void sendMoney(Account from, Account to, int amount) {
-        from.changeBalance(- amount);
-        to.changeBalance(amount);
+        from.changeBalance(amount);
+        to.changeBalance(- amount);
     }
 }

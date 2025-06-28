@@ -7,7 +7,7 @@ public class Account {
     public Account(String name, int balance) {
         //если нельзя идентифицировать аккаунт, то тоже будем выкидывать исключение
         if (name == null || name.equals("")) {
-            throw new IllegalArgumentException();
+            throw new PersonalInfoException();
         }
         this.name = name;
         this.balance = balance;
