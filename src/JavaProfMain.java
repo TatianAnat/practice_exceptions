@@ -39,14 +39,25 @@ public class JavaProfMain {
         Account petr = new Account("Petr", 5);
         System.out.println("ivan = " + ivan);
         System.out.println("petr = " + petr);
+
+        int ivanBalance = ivan.getBalance();
+        int petrBalance = petr.getBalance();
+        try {
+            sendMoney(ivan,petr,30);
+        } catch (TransactionException e) {
+            System.out.println("Caught TransactionException");
+            e.printStackTrace();
+            ivan.setBalance(ivanBalance);
+            petr.setBalance(petrBalance);
+            throw new RuntimeException("фатальная ошибка транзакции, вызов аудита ", e);
+        }
         //выполним метод перевода денег
-        sendMoney(ivan, petr, 30);
         System.out.println("ivan = " + ivan);
         System.out.println("petr = " + petr);
     }
 
     private static void sendMoney(Account from, Account to, int amount) {
-        from.changeBalance(amount);
-        to.changeBalance(- amount);
+        to.changeBalance(amount);
+        from.changeBalance(- amount);
     }
 }
