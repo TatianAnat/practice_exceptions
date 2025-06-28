@@ -26,16 +26,21 @@ public class JavaProfMain {
         }
     }
     //создаём два аккаунта
-    private static void businessTransaction(){
-        Account ivan = new Account("Ivan",20);
+    private static void businessTransaction() {
+        Account ivan = new Account("Ivan", 20);
         Account petr = new Account("Petr", 5);
 
-        System.out.println("ivan = " + ivan);
-        System.out.println("petr = " + petr);
-        //выполним метод перевода денег
-        sendMoney(ivan,petr,10);
-        System.out.println("ivan = " + ivan);
-        System.out.println("petr = " + petr);
+        try {
+            System.out.println("ivan = " + ivan);
+            System.out.println("petr = " + petr);
+            //выполним метод перевода денег
+            sendMoney(ivan, petr, 30);
+            System.out.println("ivan = " + ivan);
+            System.out.println("petr = " + petr);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Caught IllegalArgumentException");
+            e.printStackTrace();
+        }
     }
 
     private static void sendMoney(Account from, Account to, int amount) {

@@ -5,7 +5,7 @@ public class Account {
     private int balance;
 
     public Account(String name, int balance) {
-        //если нельзя идентифицировать аккаунт, то тоже будем выкидывать ошибку
+        //если нельзя идентифицировать аккаунт, то тоже будем выкидывать исключение
         if (name == null || name.equals("")) {
             throw new IllegalArgumentException();
         }
@@ -16,7 +16,7 @@ public class Account {
     public void changeBalance(int amount) {
         //будем прибавлять если только денег больше 0, если меньше нуля
         if (balance + amount < 0) {
-            //будем выкидывать ошибку
+            //будем выкидывать исключение
             throw  new IllegalArgumentException();
         }
         //в другом случае
