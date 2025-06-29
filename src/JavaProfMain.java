@@ -21,6 +21,9 @@ public class JavaProfMain {
         } catch (PersonalInfoException e) {
             System.out.println("Позвоните менеджеру! Аккаунт без имени.");
         }
+        RuntimeException exception = createException("исключение - тоже объект");
+        System.out.println(exception);
+        throw exception;
     }
 
     private static void toThrowOrNotToThrow(boolean exc) throws Exception {
@@ -88,5 +91,8 @@ public class JavaProfMain {
             from.changeBalance(-amount);
 
         }
+    }
+    private static RuntimeException createException(String message) {
+        return  new RuntimeException(message);
     }
 }
