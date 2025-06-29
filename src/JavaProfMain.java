@@ -48,32 +48,23 @@ public class JavaProfMain {
         int ivanBalance = ivan.getBalance();
         int petrBalance = petr.getBalance();
         try {
-            //добавляем в список аккаунты, которые будут в данный момент участвовать в транзакции
-            BLOCKED_ACCOUNTS.add(ivan);
-            BLOCKED_ACCOUNTS.add(petr);
             sendMoney(ivan,petr,30);
         } catch (TransactionException e) {
             System.out.println("Caught TransactionException");
-            e.printStackTrace();
+            //e.printStackTrace();
             ivan.setBalance(ivanBalance);
             petr.setBalance(petrBalance);
-            throw new RuntimeException("фатальная ошибка транзакции, вызов аудита ", e);
+            //throw new RuntimeException("фатальная ошибка транзакции, вызов аудита ", e);
         }
 
         try {
-            //добавляем в список аккаунты, которые будут в данный момент участвовать в транзакции
-            BLOCKED_ACCOUNTS.add(ivan);
-            BLOCKED_ACCOUNTS.add(petr);
             sendMoney(ivan,petr,1);
-            //удаляем из списка после транзакции
-            BLOCKED_ACCOUNTS.removeIf(account -> account.getName().equals(ivan.getName()));
-            BLOCKED_ACCOUNTS.removeIf(account -> account.getName().equals(petr.getName()));
         } catch (TransactionException e) {
             System.out.println("Caught TransactionException");
-            e.printStackTrace();
+            //e.printStackTrace();
             ivan.setBalance(ivanBalance);
             petr.setBalance(petrBalance);
-            throw new RuntimeException("фатальная ошибка транзакции, вызов аудита ", e);
+
         }
 
         //выполним метод перевода денег
@@ -85,10 +76,14 @@ public class JavaProfMain {
         for (Account a: BLOCKED_ACCOUNTS) {
             //если имя уже седержится в списках заблокированных, то мы выкидываем IllegalArgumentException()
             if (a.getName().equals(from.getName()) || a.getName().equals(to.getName())) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Аккаунт заблакирован. Попробуйте позднее.");
             }
         }
+        BLOCKED_ACCOUNTS.add(from);
+        BLOCKED_ACCOUNTS.add(from);
         to.changeBalance(amount);
         from.changeBalance(- amount);
+        BLOCKED_ACCOUNTS.removeIf(account -> account.getName().equals(from.getName()));
+        BLOCKED_ACCOUNTS.removeIf(account -> account.getName().equals(to.getName()));
     }
 }
