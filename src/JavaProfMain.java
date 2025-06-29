@@ -1,4 +1,5 @@
 import com.skypro.account.Account;
+import com.skypro.account.LockedAccount;
 import com.skypro.account.PersonalInfoException;
 import com.skypro.account.TransactionException;
 
@@ -20,7 +21,8 @@ public class JavaProfMain {
         } catch (PersonalInfoException e) {
             System.out.println("Позвоните менеджеру! Аккаунт без имени.");
         }
-}
+    }
+
     private static void toThrowOrNotToThrow(boolean exc) throws Exception {
         System.out.println("JavaProfMain.toThrowOrNotToThrow start");
         if (exc) {
@@ -29,15 +31,16 @@ public class JavaProfMain {
         System.out.println("JavaProfMain.toThrowOrNotToThrow end");
     }
 
-    private static void multiCatch(){
+    private static void multiCatch() {
         try {
-            System.out.printf("%f",1);
+            System.out.printf("%f", 1);
         } catch (IllegalFormatFlagsException e) {
             System.out.println("Caught IllegalFormatFlagsException " + e.getFlags());
         } finally {
             System.out.println("JavaProfMain.multiCatch end");
         }
     }
+
     //создаём два аккаунта
     private static void businessTransaction() {
         Account ivan = new Account("Ivan", 20);
@@ -48,7 +51,7 @@ public class JavaProfMain {
         int ivanBalance = ivan.getBalance();
         int petrBalance = petr.getBalance();
         try {
-            sendMoney(ivan,petr,30);
+            sendMoney(ivan, petr, 30);
         } catch (TransactionException e) {
             System.out.println("Caught TransactionException");
             //e.printStackTrace();
@@ -58,7 +61,7 @@ public class JavaProfMain {
         }
 
         try {
-            sendMoney(ivan,petr,1);
+            sendMoney(ivan, petr, 1);
         } catch (TransactionException e) {
             System.out.println("Caught TransactionException");
             //e.printStackTrace();
@@ -73,17 +76,17 @@ public class JavaProfMain {
     }
 
     private static void sendMoney(Account from, Account to, int amount) {
-        for (Account a: BLOCKED_ACCOUNTS) {
+        for (Account a : BLOCKED_ACCOUNTS) {
             //если имя уже седержится в списках заблокированных, то мы выкидываем IllegalArgumentException()
             if (a.getName().equals(from.getName()) || a.getName().equals(to.getName())) {
                 throw new IllegalArgumentException("Аккаунт заблакирован. Попробуйте позднее.");
             }
         }
-        BLOCKED_ACCOUNTS.add(from);
-        BLOCKED_ACCOUNTS.add(from);
-        to.changeBalance(amount);
-        from.changeBalance(- amount);
-        BLOCKED_ACCOUNTS.removeIf(account -> account.getName().equals(from.getName()));
-        BLOCKED_ACCOUNTS.removeIf(account -> account.getName().equals(to.getName()));
+        try (LockedAccount fromLocked = new LockedAccount(from.getName(), from.getBalance());
+             LockedAccount toLocked = new LockedAccount(to.getName(), to.getBalance())) {
+            to.changeBalance(amount);
+            from.changeBalance(-amount);
+
+        }
     }
 }
