@@ -2,10 +2,15 @@ import com.skypro.account.Account;
 import com.skypro.account.PersonalInfoException;
 import com.skypro.account.TransactionException;
 
+import java.util.ArrayList;
 import java.util.IllegalFormatConversionException;
 import java.util.IllegalFormatFlagsException;
+import java.util.List;
 
 public class JavaProfMain {
+
+    static List<Account> BLOCKED_ACCOUNTS = new ArrayList<>();
+
     public static void main(String[] args) {
         System.out.println("Skypro Uni - Java Profession start!");
         try {
@@ -43,6 +48,9 @@ public class JavaProfMain {
         int ivanBalance = ivan.getBalance();
         int petrBalance = petr.getBalance();
         try {
+            //добавляем в список аккаунты, которые будут в данный момент участвовать в транзакции
+            BLOCKED_ACCOUNTS.add(ivan);
+            BLOCKED_ACCOUNTS.add(petr);
             sendMoney(ivan,petr,30);
         } catch (TransactionException e) {
             System.out.println("Caught TransactionException");
@@ -51,12 +59,35 @@ public class JavaProfMain {
             petr.setBalance(petrBalance);
             throw new RuntimeException("фатальная ошибка транзакции, вызов аудита ", e);
         }
+
+        try {
+            //добавляем в список аккаунты, которые будут в данный момент участвовать в транзакции
+            BLOCKED_ACCOUNTS.add(ivan);
+            BLOCKED_ACCOUNTS.add(petr);
+            sendMoney(ivan,petr,1);
+            //удаляем из списка после транзакции
+            BLOCKED_ACCOUNTS.removeIf(account -> account.getName().equals(ivan.getName()));
+            BLOCKED_ACCOUNTS.removeIf(account -> account.getName().equals(petr.getName()));
+        } catch (TransactionException e) {
+            System.out.println("Caught TransactionException");
+            e.printStackTrace();
+            ivan.setBalance(ivanBalance);
+            petr.setBalance(petrBalance);
+            throw new RuntimeException("фатальная ошибка транзакции, вызов аудита ", e);
+        }
+
         //выполним метод перевода денег
         System.out.println("ivan = " + ivan);
         System.out.println("petr = " + petr);
     }
 
     private static void sendMoney(Account from, Account to, int amount) {
+        for (Account a: BLOCKED_ACCOUNTS) {
+            //если имя уже седержится в списках заблокированных, то мы выкидываем IllegalArgumentException()
+            if (a.getName().equals(from.getName()) || a.getName().equals(to.getName())) {
+                throw new IllegalArgumentException();
+            }
+        }
         to.changeBalance(amount);
         from.changeBalance(- amount);
     }

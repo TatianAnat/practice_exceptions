@@ -31,6 +31,10 @@ public class Account {
         this.balance = balance;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
         return "Account {" +
